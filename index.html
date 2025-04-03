@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orthodox Christian Books</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 10px;
+            background-color: #f4f4f4;
+        }
+        .category-filter {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .category-filter button {
+            margin: 0 5px;
+            padding: 8px 15px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            background-color: #eee;
+            border-radius: 4px;
+        }
+        .category-filter button.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+            max-width: 90%;
+            margin: 20px auto;
+        }
+        .book-item {
+            text-align: center;
+            cursor: pointer;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .book-item:hover {
+            transform: translateY(-5px);
+        }
+        .book-item img {
+            width: 100%;
+            height: 200px; /* Fixed height */
+            object-fit: cover; /* Changed to cover for better aesthetics */
+            border-radius: 4px; /* Slightly smaller radius */
+            margin-bottom: 8px; /* Space below image */
+        }
+        .book-title {
+            margin-top: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            min-height: 40px; /* Ensure space for multi-line titles */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #bookDetails {
+            display: none;
+            text-align: center;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-width: 600px;
+        }
+         #bookDetails img {
+            max-width: 200px;
+            max-height: 300px;
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        #detailDescription, #detailDescriptionFa {
+            text-align: left;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+        #detailAuthor {
+            font-style: italic;
+            color: #777;
+            margin-bottom: 15px;
+        }
+        #bookDetails button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="category-filter" id="categoryFilter">
+        <button data-category-id="all" class="active">All</button>
+        <!-- Category buttons will be added here by script -->
+    </div>
+
+    <div class="book-grid" id="bookGrid"></div>
+
+    <div id="bookDetails">
+        <h2 id="detailTitle"></h2>
+        <h3 id="detailTitleFa" style="font-family: 'Tahoma', sans-serif;"></h3>
+        <img id="detailImage" src="" alt="">
+        <p id="detailAuthor"></p>
+        <p id="detailDescription"></p>
+        <hr>
+        <p id="detailDescriptionFa" style="font-family: 'Tahoma', sans-serif; direction: rtl; text-align: right;"></p>
+        <p><a id="detailPdf" href="#" target="_blank">Access Document Folder</a></p>
+        <button onclick="closeDetails()">Back</button>
+    </div>
+
+    <script>
+        // JSON data
+        const data = {
+            "categories": [
+                { "id": 1, "name": "Hagiography & Biography", "name_fa": "زندگی‌نامه و قدیس‌نگاری" },
+                { "id": 2, "name": "Spiritual Guidance & Asceticism", "name_fa": "راهنمایی معنوی و زهدگرایی" },
+                { "id": 3, "name": "Theology & Dogmatics", "name_fa": "الهیات و عقاید" },
+                { "id": 4, "name": "Patristics", "name_fa": "آثار آباء کلیسا" },
+                { "id": 5, "name": "Scriptural Commentary", "name_fa": "تفسیر کتاب مقدس" },
+                { "id": 6, "name": "Contemporary Orthodoxy", "name_fa": "ارتدکس معاصر" },
+                { "id": 7, "name": "Liturgical & Sacramental Life", "name_fa": "زندگی عبادی و آیین‌ها" }
+            ],
+            "books": [
+                {
+                    "id": 1,
+                    "title": "Counsels from the Holy Mountain",
+                    "title_fa": "اندرزهایی از کوه مقدس",
+                    "author": "Geronda Ephraim of Philotheou",
+                    "description": "Spiritual advice and teachings from Elder Ephraim, former abbot of Philotheou Monastery on Mount Athos and founder of numerous monasteries in North America.",
+                    "description_fa": "نصایح و آموزه‌های معنوی از بزرگ افرایم، راهب سابق صومعه فیلوتئو در کوه آتوس و بنیانگذار صومعه‌های متعدد در آمریکای شمالی.",
+                    "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
+                    "category_ids": [2, 6],
+                    "picture_link":"https://images-na.ssl-images-amazon.com/images/I/51M0A2MAQKL._SY291_BO1,204,203,200_QL40_FMwebp_.jpg"
+                },
+                {
+                    "id": 2,
+                    "title": "At the Doors",
+                    "title_fa": "بر درگاه",
+                    "author": "Unknown / Various",
+                    "description": "Likely a collection of texts or reflections related to repentance, preparation, or the entrance into spiritual life.",
+                    "description_fa": "احتمالاً مجموعه‌ای از متون یا تأملات مربوط به توبه، آمادگی، یا ورود به زندگی معنوی.",
+                    "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
+                    "category_ids": [2, 7],
+                    "picture_link": "" // Placeholder
+                },
+                {
+                    "id": 3,
+                    "title": "Averky Gospels Commentary",
+                    "title_fa": "تفسیر اناجیل اورکی",
+                    "author": "Archbishop Averky (Taushev)",
+                    "description": "Commentary on the Four Gospels by Archbishop Averky, known for his traditional Orthodox perspective.",
+                    "description_fa": "تفسیر چهار انجیل توسط اسقف اعظم اورکی، که به خاطر دیدگاه سنتی ارتدکس خود شناخته شده است.",
+                    "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
+                    "category_ids": [5],
+                    "picture_link": "https://images-na.ssl-images-amazon.com/images/I/51QWZ6ZSXSL._SY291_BO1,204,203,200_QL40_FMwebp_.jpg"
+                },
+                 {
+                    "id": 4, // Original ID 1
+                    "title": "Monastic Wisdom",
+                    "title_fa": "حکمت رهبانی",
+                    "author": "St Joseph the Hesychast",
+                    "description": "Letters and teachings of St. Joseph the Hesychast, a major figure in 20th-century Athonite spirituality, focusing on inner prayer and watchfulness.",
+                    "description_fa": "نامه‌ها و آموزه‌های سنت جوزف هسیخاست، شخصیتی برجسته در معنویت آتوسی قرن بیستم، با تمرکز بر دعای درونی و مراقبت.",
+                    "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
+                    "category_ids": [1, 2, 4],
+                    "picture_link":"https://m.media-amazon.com/images/I/4119PSE8JRL._SY445_SX342_.jpg"
+                },
+                {
+                    "id": 5, // Original ID 2
+                    "title": "The Gurus, the Young Man, and Elder Paisios",
+                    "title_fa": "گوروها، مرد جوان و بزرگ پایسیوس",
+                    "author": "Dionysios Farasiotis",
+                    "description": "A personal account of a young man's journey through Eastern religions and philosophies before finding Orthodoxy through Elder Paisios.",
+                    "description_fa": "روایتی شخصی از سفر مردی جوان در میان ادیان و فلسفه‌های شرقی پیش از یافتن ارتدکسی از طریق بزرگ پایسیوس.",
+                    "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
+                    "category_ids": [1, 6],
+                    "picture_link":"https://m.media-amazon.com/images/I/718JkuLynrL._SY522_.jpg"
+                },
+                {
+                    "id": 6,
+                    "title": "Art of Salvation",
+                    "title_fa": "هنر رستگاری",
+                    "author": "Igumen Nikon (Vorobiev)",
+                    "description": "Spiritual counsels and letters from Igumen Nikon, emphasizing repentance, humility, and the reality of the spiritual life in challenging times.",
+                    "description_fa": "نصایح و نامه‌های معنوی از ایگومن نیکون، با تأکید بر توبه، فروتنی و واقعیت زندگی معنوی در دوران چالش‌برانگیز.",
+                    "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
+                    "category_ids": [2, 6],
+                    "picture_link": "https://images-na.ssl-images-amazon.com/images/I/41S8+3Y5JmL._SY344_BO1,204,203,200_.jpg"
+                },
+                 {
+                    "id": 7,
+                    "title": "Averky Epistles Commentary",
+                    "title_fa": "تفسیر رسائل اورکی",
+                    "author": "Archbishop Averky (Taushev)",
+                    "description": "Commentary on the Epistles of the New Testament by Archbishop Averky.",
+                    "description_fa": "تفسیر رسائل عهد جدید توسط اسقف اعظم اورکی.",
+                    "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
+                    "category_ids": [5],
+                    "picture_link": "https://jordanville.org/images/detailed/1/the_apostle_archbishop_averky_taushev_commentary_on_the_acts_and_epistles_volume_2.png" // Image often shows Acts+Epistles
+                },
+                {
+                    "id": 8,
+                    "title": "My Life in Christ",
+                    "title_fa": "زندگی من در مسیح",
+                    "author": "St. John of Kronstadt",
+                    "description": "Excerpts from the spiritual diaries of St. John of Kronstadt, offering profound insights into prayer, faith, and the struggle against sin.",
+                    "description_fa": "گزیده‌هایی از خاطرات معنوی سنت جان کرونشتات، ارائه بینش‌های عمیق در مورد دعا، ایمان و مبارزه با گناه.",
+                    "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
+                    "category_ids": [1, 2, 4], // Considered a modern Father
+                    "picture_link": "https://m.media-amazon.com/images/I/51v+x+g-6OL._SY445_SX342_.jpg"
+                },
+                {
+                    "id": 9,
+                    "title": "Everyday Saints and Other Stories",
+                    "title_fa": "قدیسان روزمره و داستان‌های دیگر",
+                    "author": "Archimandrite Tikhon (Shevkunov)",
+                    "description": "A widely popular book recounting stories from the Pskov Caves Monastery and the author's experiences, revealing the presence of God in modern life.",
+                    "description_fa": "کتابی بسیار محبوب که داستان‌هایی از صومعه غارهای پسکوف و تجربیات نویسنده را بازگو می‌کند و حضور خدا را در زندگی مدرن آشکار می‌سازد.",
+                    "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
+                    "category_ids": [1, 6],
+                    "picture_link": "https://m.media-amazon.com/images/I/8175ym9n8lL._SY522_.jpg"
+                },
+                 {
+                    "id": 10,
+                    "title": "Averky Acts Commentary",
+                    "title_fa": "تفسیر اعمال رسولان اورکی",
+                    "author": "Archbishop Averky (Taushev)",
+                    "description": "Commentary on the Book of Acts by Archbishop Averky.",
+                    "description_fa": "تفسیر کتاب اعمال رسولان توسط اسقف اعظم اورکی.",
+                    "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
+                    "category_ids": [5],
+                    "picture_link": "https://jordanville.org/images/detailed/1/the_apostle_archbishop_averky_taushev_commentary_on_the_acts_and_epistles_volume_1.png" // Image often shows Acts+Epistles vol 1
+                },
+                 {
+                    "id": 11,
+                    "title": "The Way of a Pilgrim",
+                    "title_fa": "طریق زائر",
+                    "author": "Anonymous",
+                    "description": "A classic 19th-century Russian text detailing a pilgrim's journey to learn the Jesus Prayer and practice unceasing prayer.",
+                    "description_fa": "متن کلاسیک روسی قرن نوزدهم که سفر یک زائر برای یادگیری دعای عیسی و تمرین دعای بی‌وقفه را شرح می‌دهد.",
+                    "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
+                    "category_ids": [2, 1], // Spiritual guidance presented as a narrative/biography
+                    "picture_link": "https://m.media-amazon.com/images/I/517P9ZW84HL._SY445_SX342_.jpg"
+                },
+                 {
+                    "id": 12,
+                    "title": "The Soul After Death",
+                    "title_fa": "روح پس از مرگ",
+                    "author": "Fr. Seraphim Rose",
+                    "description": "An examination of the Orthodox Christian understanding of the afterlife, contrasting it with modern and non-Orthodox views.",
+                    "description_fa": "بررسی درک مسیحیت ارتدکس از زندگی پس از مرگ، و مقایسه آن با دیدگاه‌های مدرن و غیر ارتدکس.",
+                    "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
+                    "category_ids": [3, 6],
+                    "picture_link": "https://m.media-amazon.com/images/I/51oVdE4lHHL._SY445_SX342_.jpg"
+                },
+                 {
+                    "id": 13,
+                    "title": "Orthodoxy and the Religion of the Future",
+                    "title_fa": "ارتدکسی و دین آینده",
+                    "author": "Fr. Seraphim Rose",
+                    "description": "A critical look at contemporary spiritual trends, cults, and the rise of Eastern religions from an Orthodox perspective, arguing for the uniqueness of Christian truth.",
+                    "description_fa": "نگاهی انتقادی به گرایش‌های معنوی معاصر، فرقه‌ها و ظهور ادیان شرقی از منظر ارتدکس، با استدلال بر یگانگی حقیقت مسیحی.",
+                    "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
+                    "category_ids": [3, 6],
+                    "picture_link": "https://images-na.ssl-images-amazon.com/images/I/41P0J7R6BHL._SY291_BO1,204,203,200_QL40_FMwebp_.jpg"
+                },
+                 {
+                    "id": 14,
+                    "title": "Unseen Warfare",
+                    "title_fa": "نبرد نادیدنی",
+                    "author": "St. Nicodemus of the Holy Mountain (Based on Lorenzo Scupoli)",
+                    "description": "A classic manual on spiritual combat, guiding the Christian in the struggle against passions, temptations, and demonic influences through prayer, watchfulness, and humility.",
+                    "description_fa": "یک راهنمای کلاسیک در مورد نبرد معنوی، که مسیحیان را در مبارزه با امیال نفسانی، وسوسه‌ها و تأثیرات شیطانی از طریق دعا، مراقبت و فروتنی هدایت می‌کند.",
+                    "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
+                    "category_ids": [2, 4],
+                    "picture_link": "https://m.media-amazon.com/images/I/51-Ua8Fm6aL._SY445_SX342_.jpg"
+                },
+                 {
+                    "id": 15,
+                    "title": "Orthodox Dogmatic Theology",
+                    "title_fa": "الهیات اعتقادی ارتدکس",
+                    "author": "Protopresbyter Michael Pomazansky",
+                    "description": "A concise yet comprehensive overview of the fundamental doctrines of the Orthodox Church.",
+                    "description_fa": "مروری مختصر اما جامع بر آموزه‌های بنیادین کلیسای ارتدکس.",
+                    "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
+                    "category_ids": [3],
+                    "picture_link": "https://m.media-amazon.com/images/I/51s607Q0oSL._SY445_SX342_.jpg"
+                },
+                 {
+                    "id": 16,
+                    "title": "The Prologue from Ochrid",
+                    "title_fa": "پیش‌گفتار اخرید",
+                    "author": "St. Nikolai Velimirovich",
+                    "description": "A collection of lives of saints, hymns, reflections, and homilies for each day of the year.",
+                    "description_fa": "مجموعه‌ای از زندگی‌نامه قدیسان، سرودها، تأملات و موعظه‌ها برای هر روز از سال.",
+                    "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
+                    "category_ids": [1, 2, 7], // Includes hymns/daily readings
+                    "picture_link": "https://images-na.ssl-images-amazon.com/images/I/51PZ4F7Y8FL._SY291_BO1,204,203,200_QL40_FMwebp_.jpg" // Often comes in multiple volumes
+                },
+                 {
+                    "id": 17,
+                    "title": "Confession",
+                    "title_fa": "اعتراف",
+                    "author": "Unknown / Various",
+                    "description": "Likely a guide or collection of writings concerning the Mystery (Sacrament) of Holy Confession in the Orthodox Church.",
+                    "description_fa": "احتمالاً یک راهنما یا مجموعه‌ای از نوشته‌ها در مورد راز مقدس اعتراف در کلیسای ارتدکس.",
+                    "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
+                    "category_ids": [7, 2],
+                    "picture_link": "" // Placeholder
+                },
+                 {
+                    "id": 18,
+                    "title": "The Ladder of Divine Ascent",
+                    "title_fa": "نردبان عروج الهی",
+                    "author": "St. John Climacus",
+                    "description": "A foundational text of Orthodox spirituality describing the ascent of the soul to God through thirty steps, written by the 7th-century abbot of St. Catherine's Monastery.",
+                    "description_fa": "متنی بنیادین در معنویت ارتدکس که صعود روح به سوی خدا را از طریق سی پله توصیف می‌کند، نوشته شده توسط راهب قرن هفتم صومعه سنت کاترین.",
+                    "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
+                    "category_ids": [2, 4],
+                    "picture_link": "https://m.media-amazon.com/images/I/615-3xq7JcL._SY425_.jpg"
+                },
+                 { // Assuming this is the same book as #5, just maybe a different file/translation
+                    "id": 19,
+                    "title": "The Gurus, the Young Man, and Elder Paisios (Translated II)",
+                    "title_fa": "گوروها، مرد جوان و بزرگ پایسیوس (ترجمه ۲)",
+                    "author": "Dionysios Farasiotis",
+                    "description": "A personal account of a young man's journey through Eastern religions and philosophies before finding Orthodoxy through Elder Paisios. (Possible alternate version or translation).",
+                    "description_fa": "روایتی شخصی از سفر مردی جوان در میان ادیان و فلسفه‌های شرقی پیش از یافتن ارتدکسی از طریق بزرگ پایسیوس. (نسخه یا ترجمه احتمالی جایگزین).",
+                    "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
+                    "category_ids": [1, 6],
+                    "picture_link":"https://m.media-amazon.com/images/I/718JkuLynrL._SY522_.jpg" // Same image as #5
+                },
+                 {
+                    "id": 20,
+                    "title": "Hieromonk Gregorios Writings", // Placeholder title based on filename
+                    "title_fa": "نوشته‌های هیرومونک گریگوریوس",
+                    "author": "Hieromonk Gregorios",
+                    "description": "Writings by Hieromonk Gregorios, likely associated with Mount Athos, possibly focusing on theology or spiritual life.",
+                    "description_fa": "نوشته‌های هیرومونک گریگوریوس، احتمالاً مرتبط با کوه آتوس، که ممکن است بر الهیات یا زندگی معنوی تمرکز داشته باشند.",
+                    "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
+                    "category_ids": [2, 3, 6], // Guess based on common topics
+                    "picture_link": "" // Placeholder
+                }
+                // Note: Original book with ID 3 ("Unknown Book") was removed as it wasn't in the screenshot.
+            ]
+        };
+
+        const defaultImage = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="; // 1x1 transparent png
+        let currentFilter = "all";
+
+        function displayCategories() {
+            const categoryFilter = document.getElementById("categoryFilter");
+            data.categories.forEach(category => {
+                const button = document.createElement("button");
+                button.textContent = category.name;
+                button.setAttribute("data-category-id", category.id);
+                button.addEventListener("click", () => filterBooks(category.id));
+                categoryFilter.appendChild(button);
+            });
+            // Add listener for the 'All' button
+             categoryFilter.querySelector('[data-category-id="all"]').addEventListener("click", () => filterBooks("all"));
+        }
+
+         function filterBooks(categoryId) {
+            currentFilter = categoryId;
+            displayBooks();
+            // Update active button state
+            const buttons = document.querySelectorAll(".category-filter button");
+            buttons.forEach(button => {
+                if (button.getAttribute("data-category-id") == categoryId) {
+                    button.classList.add("active");
+                } else {
+                    button.classList.remove("active");
+                }
+            });
+             closeDetails(); // Go back to grid view when changing filter
+        }
+
+        function displayBooks() {
+            const bookGrid = document.getElementById("bookGrid");
+            bookGrid.innerHTML = ""; // Clear existing books
+
+            const filteredBooks = currentFilter === "all"
+                ? data.books
+                : data.books.filter(book => book.category_ids.includes(parseInt(currentFilter)));
+
+             // Sort books alphabetically by title
+            filteredBooks.sort((a, b) => a.title.localeCompare(b.title));
+
+            filteredBooks.forEach(book => {
+                const bookItem = document.createElement("div");
+                bookItem.classList.add("book-item");
+                bookItem.setAttribute("data-id", book.id);
+
+                const imageUrl = book.picture_link ? book.picture_link : defaultImage;
+
+                bookItem.innerHTML = `
+                    <img src="${imageUrl}" alt="${book.title}" onerror="this.onerror=null;this.src='${defaultImage}';">
+                    <p class="book-title">${book.title_fa}</p>
+                `;
+
+                bookItem.addEventListener("click", () => {
+                    // window.history.pushState({}, "", `?book=${book.id}`); // Keep history simple for now
+                    showBookDetails(book.id);
+                });
+
+                bookGrid.appendChild(bookItem);
+            });
+
+            // checkForPermalink(); // Disable permalink for simplicity with filtering
+        }
+
+        function showBookDetails(bookId) {
+            const book = data.books.find(b => b.id == bookId);
+            if (!book) return;
+
+            document.getElementById("detailTitle").textContent = book.title;
+            document.getElementById("detailTitleFa").textContent = book.title_fa || ""; // Handle missing translation
+            document.getElementById("detailImage").src = book.picture_link ? book.picture_link : defaultImage;
+            document.getElementById("detailImage").alt = book.title;
+             document.getElementById("detailImage").onerror = function() { this.onerror=null; this.src=defaultImage; }; // Handle broken image links
+            document.getElementById("detailAuthor").textContent = "Author: " + book.author;
+            document.getElementById("detailDescription").textContent = book.description || "No description available.";
+            document.getElementById("detailDescriptionFa").textContent = book.description_fa || ""; // Handle missing translation
+            document.getElementById("detailPdf").href = book.pdf_link;
+
+            document.getElementById("bookGrid").style.display = "none";
+            document.getElementById("categoryFilter").style.display = "none"; // Hide filters in detail view
+            document.getElementById("bookDetails").style.display = "block";
+        }
+
+        function closeDetails() {
+            // window.history.pushState({}, "", window.location.pathname); // Keep history simple
+            document.getElementById("bookGrid").style.display = "grid";
+            document.getElementById("categoryFilter").style.display = "block"; // Show filters again
+            document.getElementById("bookDetails").style.display = "none";
+        }
+
+        /*
+        // Permalink functionality might conflict with filtering, disabled for now.
+        function checkForPermalink() {
+            const params = new URLSearchParams(window.location.search);
+            const bookId = params.get("book");
+            if (bookId) {
+                showBookDetails(bookId);
+            }
+        }
+        */
+
+        // Initial setup
+        displayCategories();
+        displayBooks(); // Display all books initially
+
+    </script>
+
+</body>
+</html>
