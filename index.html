@@ -367,7 +367,7 @@
             const categoryFilter = document.getElementById("categoryFilter");
             data.categories.forEach(category => {
                 const button = document.createElement("button");
-                button.textContent = category.name;
+                button.textContent = category.name_fa;
                 button.setAttribute("data-category-id", category.id);
                 button.addEventListener("click", () => filterBooks(category.id));
                 categoryFilter.appendChild(button);
