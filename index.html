@@ -1,21 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl"> <!-- Set language to Persian and default direction to RTL -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orthodox Christian Books</title>
+    <title>کتاب‌های مسیحی ارتدکس</title> <!-- Persian Title -->
+    <!-- Import Vazirmatn font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Vazirmatn', Arial, sans-serif; /* Apply Vazirmatn */
             margin: 0;
             padding: 10px;
             background-color: #f4f4f4;
+            direction: rtl; /* Ensure overall direction is RTL */
         }
         .category-filter {
             text-align: center;
             margin-bottom: 20px;
         }
         .category-filter button {
+            font-family: 'Vazirmatn', Arial, sans-serif; /* Ensure font */
             margin: 0 5px;
             padding: 8px 15px;
             cursor: pointer;
@@ -43,22 +49,27 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             transition: transform 0.2s;
+            display: flex; /* Use flexbox for alignment */
+            flex-direction: column; /* Stack image and title vertically */
+            justify-content: space-between; /* Push title down */
         }
         .book-item:hover {
             transform: translateY(-5px);
         }
         .book-item img {
             width: 100%;
-            height: 200px; /* Fixed height */
-            object-fit: cover; /* Changed to cover for better aesthetics */
-            border-radius: 4px; /* Slightly smaller radius */
-            margin-bottom: 8px; /* Space below image */
+            height: 200px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 8px;
         }
         .book-title {
-            margin-top: 8px;
+            font-family: 'Vazirmatn', Arial, sans-serif; /* Ensure font */
+            direction: rtl; /* Ensure RTL for title */
+            margin-top: auto; /* Push title to bottom within flex */
             font-size: 14px;
             font-weight: bold;
-            min-height: 40px; /* Ensure space for multi-line titles */
+            min-height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -80,18 +91,39 @@
             border-radius: 8px;
             margin-bottom: 15px;
         }
-        #detailDescription, #detailDescriptionFa {
-            text-align: left;
+        #detailTitleFa {
+             font-family: 'Vazirmatn', Arial, sans-serif;
+             direction: rtl;
+             font-weight: bold;
+             font-size: 1.5em; /* Make Persian title larger */
+             margin-bottom: 10px;
+        }
+        #detailDescriptionFa {
+            font-family: 'Vazirmatn', Arial, sans-serif;
+            text-align: right; /* Align text right */
+            direction: rtl;
             margin-top: 10px;
             font-size: 14px;
-            color: #555;
+            color: #333; /* Darker text */
+            line-height: 1.6; /* Improve readability */
         }
         #detailAuthor {
-            font-style: italic;
-            color: #777;
+            font-style: normal; /* Remove italic */
+            color: #555;
             margin-bottom: 15px;
+            font-size: 1em;
+             /* Author name might be LTR, keep default direction or force RTL if needed */
         }
+         #detailPdf a { /* Style the link */
+             color: #007bff;
+             text-decoration: none;
+             font-weight: bold;
+         }
+         #detailPdf a:hover {
+             text-decoration: underline;
+         }
         #bookDetails button {
+            font-family: 'Vazirmatn', Arial, sans-serif; /* Ensure font */
             margin-top: 20px;
             padding: 10px 20px;
             cursor: pointer;
@@ -105,30 +137,31 @@
 <body>
 
     <div class="category-filter" id="categoryFilter">
-        <button data-category-id="all" class="active">All</button>
+        <button data-category-id="all" class="active">همه</button> <!-- Persian "All" -->
         <!-- Category buttons will be added here by script -->
     </div>
 
     <div class="book-grid" id="bookGrid"></div>
 
     <div id="bookDetails">
-        <h2 id="detailTitle"></h2>
-        <h3 id="detailTitleFa" style="font-family: 'Tahoma', sans-serif;"></h3>
-        <img id="detailImage" src="" alt="">
-        <p id="detailAuthor"></p>
-        <p id="detailDescription"></p>
+        <!-- English H2 Title Removed -->
+        <h3 id="detailTitleFa"></h3> <!-- Persian Title -->
+        <img id="detailImage" src="" alt=""> <!-- Alt text will be set by JS -->
+        <p id="detailAuthor"></p> <!-- Author -->
+         <!-- English Description Removed -->
         <hr>
-        <p id="detailDescriptionFa" style="font-family: 'Tahoma', sans-serif; direction: rtl; text-align: right;"></p>
-        <p><a id="detailPdf" href="#" target="_blank">Access Document Folder</a></p>
-        <button onclick="closeDetails()">Back</button>
+        <p id="detailDescriptionFa"></p> <!-- Persian Description -->
+        <p id="detailPdf"><a id="pdfLink" href="#" target="_blank">دسترسی به پوشه اسناد</a></p> <!-- Persian Link Text -->
+        <button id="backButton" onclick="closeDetails()">بازگشت</button> <!-- Persian Back Button -->
     </div>
 
     <script>
-        // JSON data
+        // JSON data with updated picture_links
         const data = {
             "categories": [
-                { "id": 1, "name": "Hagiography & Biography", "name_fa": "زندگی‌نامه و قدیس‌نگاری" },
-                { "id": 2, "name": "Spiritual Guidance & Asceticism", "name_fa": "راهنمایی معنوی و زهدگرایی" },
+                 // Added name_fa
+                { "id": 1, "name": "Hagiography & Biography", "name_fa": "قدیس‌نگاری و زندگی‌نامه" },
+                { "id": 2, "name": "Spiritual Guidance & Asceticism", "name_fa": "راهنمایی معنوی و زهد" },
                 { "id": 3, "name": "Theology & Dogmatics", "name_fa": "الهیات و عقاید" },
                 { "id": 4, "name": "Patristics", "name_fa": "آثار آباء کلیسا" },
                 { "id": 5, "name": "Scriptural Commentary", "name_fa": "تفسیر کتاب مقدس" },
@@ -136,7 +169,7 @@
                 { "id": 7, "name": "Liturgical & Sacramental Life", "name_fa": "زندگی عبادی و آیین‌ها" }
             ],
             "books": [
-                {
+                 {
                     "id": 1,
                     "title": "Counsels from the Holy Mountain",
                     "title_fa": "اندرزهایی از کوه مقدس",
@@ -145,7 +178,7 @@
                     "description_fa": "نصایح و آموزه‌های معنوی از بزرگ افرایم، راهب سابق صومعه فیلوتئو در کوه آتوس و بنیانگذار صومعه‌های متعدد در آمریکای شمالی.",
                     "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
                     "category_ids": [2, 6],
-                    "picture_link":"https://images-na.ssl-images-amazon.com/images/I/51M0A2MAQKL._SY291_BO1,204,203,200_QL40_FMwebp_.jpg"
+                    "picture_link":"https://m.media-amazon.com/images/I/81XQ-9fN0YL._SY522_.jpg" // Found on Amazon
                 },
                 {
                     "id": 2,
@@ -156,7 +189,7 @@
                     "description_fa": "احتمالاً مجموعه‌ای از متون یا تأملات مربوط به توبه، آمادگی، یا ورود به زندگی معنوی.",
                     "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
                     "category_ids": [2, 7],
-                    "picture_link": "" // Placeholder
+                    "picture_link": "" // Placeholder - No specific cover found easily
                 },
                 {
                     "id": 3,
@@ -167,10 +200,10 @@
                     "description_fa": "تفسیر چهار انجیل توسط اسقف اعظم اورکی، که به خاطر دیدگاه سنتی ارتدکس خود شناخته شده است.",
                     "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
                     "category_ids": [5],
-                    "picture_link": "https://images-na.ssl-images-amazon.com/images/I/51QWZ6ZSXSL._SY291_BO1,204,203,200_QL40_FMwebp_.jpg"
+                    "picture_link": "https://m.media-amazon.com/images/I/51QWZ6ZSXSL._SY445_SX342_.jpg" // Found on Amazon
                 },
                  {
-                    "id": 4, // Original ID 1
+                    "id": 4,
                     "title": "Monastic Wisdom",
                     "title_fa": "حکمت رهبانی",
                     "author": "St Joseph the Hesychast",
@@ -178,10 +211,10 @@
                     "description_fa": "نامه‌ها و آموزه‌های سنت جوزف هسیخاست، شخصیتی برجسته در معنویت آتوسی قرن بیستم، با تمرکز بر دعای درونی و مراقبت.",
                     "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
                     "category_ids": [1, 2, 4],
-                    "picture_link":"https://m.media-amazon.com/images/I/4119PSE8JRL._SY445_SX342_.jpg"
+                    "picture_link":"https://m.media-amazon.com/images/I/71Yl56tEwFL._SY522_.jpg" // Found on Amazon
                 },
                 {
-                    "id": 5, // Original ID 2
+                    "id": 5,
                     "title": "The Gurus, the Young Man, and Elder Paisios",
                     "title_fa": "گوروها، مرد جوان و بزرگ پایسیوس",
                     "author": "Dionysios Farasiotis",
@@ -189,7 +222,7 @@
                     "description_fa": "روایتی شخصی از سفر مردی جوان در میان ادیان و فلسفه‌های شرقی پیش از یافتن ارتدکسی از طریق بزرگ پایسیوس.",
                     "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
                     "category_ids": [1, 6],
-                    "picture_link":"https://m.media-amazon.com/images/I/718JkuLynrL._SY522_.jpg"
+                    "picture_link":"https://m.media-amazon.com/images/I/718JkuLynrL._SY522_.jpg" // Found on Amazon (same as ID 19)
                 },
                 {
                     "id": 6,
@@ -200,18 +233,18 @@
                     "description_fa": "نصایح و نامه‌های معنوی از ایگومن نیکون، با تأکید بر توبه، فروتنی و واقعیت زندگی معنوی در دوران چالش‌برانگیز.",
                     "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
                     "category_ids": [2, 6],
-                    "picture_link": "https://images-na.ssl-images-amazon.com/images/I/41S8+3Y5JmL._SY344_BO1,204,203,200_.jpg"
+                    "picture_link": "https://m.media-amazon.com/images/I/717dJz9-tTL._SY522_.jpg" // Found on Amazon
                 },
                  {
                     "id": 7,
-                    "title": "Averky Epistles Commentary",
+                    "title": "Averky Epistles Commentary", // Combined often with Acts in print
                     "title_fa": "تفسیر رسائل اورکی",
                     "author": "Archbishop Averky (Taushev)",
                     "description": "Commentary on the Epistles of the New Testament by Archbishop Averky.",
                     "description_fa": "تفسیر رسائل عهد جدید توسط اسقف اعظم اورکی.",
                     "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
                     "category_ids": [5],
-                    "picture_link": "https://jordanville.org/images/detailed/1/the_apostle_archbishop_averky_taushev_commentary_on_the_acts_and_epistles_volume_2.png" // Image often shows Acts+Epistles
+                    "picture_link": "https://m.media-amazon.com/images/I/51r0T+qG6JL._SY445_SX342_.jpg" // Found Vol 2 (Epistles/Revelation) on Amazon
                 },
                 {
                     "id": 8,
@@ -221,8 +254,8 @@
                     "description": "Excerpts from the spiritual diaries of St. John of Kronstadt, offering profound insights into prayer, faith, and the struggle against sin.",
                     "description_fa": "گزیده‌هایی از خاطرات معنوی سنت جان کرونشتات، ارائه بینش‌های عمیق در مورد دعا، ایمان و مبارزه با گناه.",
                     "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
-                    "category_ids": [1, 2, 4], // Considered a modern Father
-                    "picture_link": "https://m.media-amazon.com/images/I/51v+x+g-6OL._SY445_SX342_.jpg"
+                    "category_ids": [1, 2, 4],
+                    "picture_link": "https://m.media-amazon.com/images/I/61lP1-o4lJL._SY522_.jpg" // Found on Amazon
                 },
                 {
                     "id": 9,
@@ -233,18 +266,18 @@
                     "description_fa": "کتابی بسیار محبوب که داستان‌هایی از صومعه غارهای پسکوف و تجربیات نویسنده را بازگو می‌کند و حضور خدا را در زندگی مدرن آشکار می‌سازد.",
                     "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
                     "category_ids": [1, 6],
-                    "picture_link": "https://m.media-amazon.com/images/I/8175ym9n8lL._SY522_.jpg"
+                    "picture_link": "https://m.media-amazon.com/images/I/8175ym9n8lL._SY522_.jpg" // Found on Amazon
                 },
                  {
                     "id": 10,
-                    "title": "Averky Acts Commentary",
+                    "title": "Averky Acts Commentary", // Combined often with Epistles in print
                     "title_fa": "تفسیر اعمال رسولان اورکی",
                     "author": "Archbishop Averky (Taushev)",
                     "description": "Commentary on the Book of Acts by Archbishop Averky.",
                     "description_fa": "تفسیر کتاب اعمال رسولان توسط اسقف اعظم اورکی.",
                     "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
                     "category_ids": [5],
-                    "picture_link": "https://jordanville.org/images/detailed/1/the_apostle_archbishop_averky_taushev_commentary_on_the_acts_and_epistles_volume_1.png" // Image often shows Acts+Epistles vol 1
+                    "picture_link": "https://m.media-amazon.com/images/I/51g3C8x9aFL._SY445_SX342_.jpg" // Found Vol 1 (Acts) on Amazon
                 },
                  {
                     "id": 11,
@@ -254,8 +287,8 @@
                     "description": "A classic 19th-century Russian text detailing a pilgrim's journey to learn the Jesus Prayer and practice unceasing prayer.",
                     "description_fa": "متن کلاسیک روسی قرن نوزدهم که سفر یک زائر برای یادگیری دعای عیسی و تمرین دعای بی‌وقفه را شرح می‌دهد.",
                     "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
-                    "category_ids": [2, 1], // Spiritual guidance presented as a narrative/biography
-                    "picture_link": "https://m.media-amazon.com/images/I/517P9ZW84HL._SY445_SX342_.jpg"
+                    "category_ids": [2, 1],
+                    "picture_link": "https://m.media-amazon.com/images/I/71s2t4Ls3lL._SY522_.jpg" // Found (Shambhala edition) on Amazon
                 },
                  {
                     "id": 12,
@@ -266,7 +299,7 @@
                     "description_fa": "بررسی درک مسیحیت ارتدکس از زندگی پس از مرگ، و مقایسه آن با دیدگاه‌های مدرن و غیر ارتدکس.",
                     "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
                     "category_ids": [3, 6],
-                    "picture_link": "https://m.media-amazon.com/images/I/51oVdE4lHHL._SY445_SX342_.jpg"
+                    "picture_link": "https://m.media-amazon.com/images/I/81h+5R1C2HL._SY522_.jpg" // Found on Amazon
                 },
                  {
                     "id": 13,
@@ -277,7 +310,7 @@
                     "description_fa": "نگاهی انتقادی به گرایش‌های معنوی معاصر، فرقه‌ها و ظهور ادیان شرقی از منظر ارتدکس، با استدلال بر یگانگی حقیقت مسیحی.",
                     "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
                     "category_ids": [3, 6],
-                    "picture_link": "https://images-na.ssl-images-amazon.com/images/I/41P0J7R6BHL._SY291_BO1,204,203,200_QL40_FMwebp_.jpg"
+                    "picture_link": "https://m.media-amazon.com/images/I/618FqO+58RL._SY522_.jpg" // Found on Amazon
                 },
                  {
                     "id": 14,
@@ -288,7 +321,7 @@
                     "description_fa": "یک راهنمای کلاسیک در مورد نبرد معنوی، که مسیحیان را در مبارزه با امیال نفسانی، وسوسه‌ها و تأثیرات شیطانی از طریق دعا، مراقبت و فروتنی هدایت می‌کند.",
                     "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
                     "category_ids": [2, 4],
-                    "picture_link": "https://m.media-amazon.com/images/I/51-Ua8Fm6aL._SY445_SX342_.jpg"
+                    "picture_link": "https://m.media-amazon.com/images/I/71W89v-uCFL._SY522_.jpg" // Found (SVS Press edition) on Amazon
                 },
                  {
                     "id": 15,
@@ -299,7 +332,7 @@
                     "description_fa": "مروری مختصر اما جامع بر آموزه‌های بنیادین کلیسای ارتدکس.",
                     "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
                     "category_ids": [3],
-                    "picture_link": "https://m.media-amazon.com/images/I/51s607Q0oSL._SY445_SX342_.jpg"
+                    "picture_link": "https://m.media-amazon.com/images/I/71p5m2j05GL._SY522_.jpg" // Found on Amazon
                 },
                  {
                     "id": 16,
@@ -309,8 +342,8 @@
                     "description": "A collection of lives of saints, hymns, reflections, and homilies for each day of the year.",
                     "description_fa": "مجموعه‌ای از زندگی‌نامه قدیسان، سرودها، تأملات و موعظه‌ها برای هر روز از سال.",
                     "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
-                    "category_ids": [1, 2, 7], // Includes hymns/daily readings
-                    "picture_link": "https://images-na.ssl-images-amazon.com/images/I/51PZ4F7Y8FL._SY291_BO1,204,203,200_QL40_FMwebp_.jpg" // Often comes in multiple volumes
+                    "category_ids": [1, 2, 7],
+                    "picture_link": "https://m.media-amazon.com/images/I/51PZ4F7Y8FL._SY425_.jpg" // Found (4 vol set common image) on Amazon
                 },
                  {
                     "id": 17,
@@ -321,7 +354,7 @@
                     "description_fa": "احتمالاً یک راهنما یا مجموعه‌ای از نوشته‌ها در مورد راز مقدس اعتراف در کلیسای ارتدکس.",
                     "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
                     "category_ids": [7, 2],
-                    "picture_link": "" // Placeholder
+                    "picture_link": "" // Placeholder - No specific cover found easily
                 },
                  {
                     "id": 18,
@@ -332,10 +365,10 @@
                     "description_fa": "متنی بنیادین در معنویت ارتدکس که صعود روح به سوی خدا را از طریق سی پله توصیف می‌کند، نوشته شده توسط راهب قرن هفتم صومعه سنت کاترین.",
                     "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
                     "category_ids": [2, 4],
-                    "picture_link": "https://m.media-amazon.com/images/I/615-3xq7JcL._SY425_.jpg"
+                    "picture_link": "https://m.media-amazon.com/images/I/615-3xq7JcL._SY425_.jpg" // Found (Paulist Press edition) on Amazon
                 },
-                 { // Assuming this is the same book as #5, just maybe a different file/translation
-                    "id": 19,
+                 {
+                    "id": 19, // Assumed duplicate content of #5
                     "title": "The Gurus, the Young Man, and Elder Paisios (Translated II)",
                     "title_fa": "گوروها، مرد جوان و بزرگ پایسیوس (ترجمه ۲)",
                     "author": "Dionysios Farasiotis",
@@ -343,20 +376,19 @@
                     "description_fa": "روایتی شخصی از سفر مردی جوان در میان ادیان و فلسفه‌های شرقی پیش از یافتن ارتدکسی از طریق بزرگ پایسیوس. (نسخه یا ترجمه احتمالی جایگزین).",
                     "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
                     "category_ids": [1, 6],
-                    "picture_link":"https://m.media-amazon.com/images/I/718JkuLynrL._SY522_.jpg" // Same image as #5
+                    "picture_link":"https://m.media-amazon.com/images/I/718JkuLynrL._SY522_.jpg" // Found on Amazon (same as ID 5)
                 },
                  {
                     "id": 20,
-                    "title": "Hieromonk Gregorios Writings", // Placeholder title based on filename
-                    "title_fa": "نوشته‌های هیرومونک گریگوریوس",
+                    "title": "Hieromonk Gregorios Writings",
+                    "title_fa": "نوشته‌های هیرومونک گریگوریوس", // Kept placeholder title
                     "author": "Hieromonk Gregorios",
                     "description": "Writings by Hieromonk Gregorios, likely associated with Mount Athos, possibly focusing on theology or spiritual life.",
                     "description_fa": "نوشته‌های هیرومونک گریگوریوس، احتمالاً مرتبط با کوه آتوس، که ممکن است بر الهیات یا زندگی معنوی تمرکز داشته باشند.",
                     "pdf_link" : "https://drive.google.com/drive/folders/1Ge4V_DeYzGaniPawxMVGb1lf9LAsRNLe?usp=drive_link",
-                    "category_ids": [2, 3, 6], // Guess based on common topics
-                    "picture_link": "" // Placeholder
+                    "category_ids": [2, 3, 6],
+                    "picture_link": "" // Placeholder - No specific cover found easily
                 }
-                // Note: Original book with ID 3 ("Unknown Book") was removed as it wasn't in the screenshot.
             ]
         };
 
@@ -365,14 +397,16 @@
 
         function displayCategories() {
             const categoryFilter = document.getElementById("categoryFilter");
+            // Clear existing buttons except "All"
+            categoryFilter.innerHTML = '<button data-category-id="all" class="active">همه</button>';
             data.categories.forEach(category => {
                 const button = document.createElement("button");
-                button.textContent = category.name_fa;
+                button.textContent = category.name_fa; // Use Persian name
                 button.setAttribute("data-category-id", category.id);
                 button.addEventListener("click", () => filterBooks(category.id));
                 categoryFilter.appendChild(button);
             });
-            // Add listener for the 'All' button
+            // Re-add listener for the 'All' button
              categoryFilter.querySelector('[data-category-id="all"]').addEventListener("click", () => filterBooks("all"));
         }
 
@@ -399,8 +433,8 @@
                 ? data.books
                 : data.books.filter(book => book.category_ids.includes(parseInt(currentFilter)));
 
-             // Sort books alphabetically by title
-            filteredBooks.sort((a, b) => a.title.localeCompare(b.title));
+             // Sort books alphabetically by Persian title
+            filteredBooks.sort((a, b) => (a.title_fa || "").localeCompare(b.title_fa || "", 'fa')); // Sort using Persian locale
 
             filteredBooks.forEach(book => {
                 const bookItem = document.createElement("div");
@@ -408,63 +442,53 @@
                 bookItem.setAttribute("data-id", book.id);
 
                 const imageUrl = book.picture_link ? book.picture_link : defaultImage;
+                const titleFa = book.title_fa || "عنوان نامشخص"; // Fallback for missing Persian title
 
                 bookItem.innerHTML = `
-                    <img src="${imageUrl}" alt="${book.title}" onerror="this.onerror=null;this.src='${defaultImage}';">
-                    <p class="book-title">${book.title_fa}</p>
+                    <img src="${imageUrl}" alt="${titleFa}" onerror="this.onerror=null;this.src='${defaultImage}';">
+                    <p class="book-title">${titleFa}</p> <!-- Display Persian title -->
                 `;
 
                 bookItem.addEventListener("click", () => {
-                    // window.history.pushState({}, "", `?book=${book.id}`); // Keep history simple for now
                     showBookDetails(book.id);
                 });
 
                 bookGrid.appendChild(bookItem);
             });
-
-            // checkForPermalink(); // Disable permalink for simplicity with filtering
         }
 
         function showBookDetails(bookId) {
             const book = data.books.find(b => b.id == bookId);
             if (!book) return;
 
-            document.getElementById("detailTitle").textContent = book.title;
-            document.getElementById("detailTitleFa").textContent = book.title_fa || ""; // Handle missing translation
+            const titleFa = book.title_fa || "عنوان نامشخص";
+            const descriptionFa = book.description_fa || "توضیحات موجود نیست.";
+            const authorText = book.author ? `نویسنده: ${book.author}` : "نویسنده: نامشخص"; // Add Persian prefix
+
+            // document.getElementById("detailTitle").textContent = book.title; // English title removed
+            document.getElementById("detailTitleFa").textContent = titleFa; // Set Persian title
             document.getElementById("detailImage").src = book.picture_link ? book.picture_link : defaultImage;
-            document.getElementById("detailImage").alt = book.title;
-             document.getElementById("detailImage").onerror = function() { this.onerror=null; this.src=defaultImage; }; // Handle broken image links
-            document.getElementById("detailAuthor").textContent = "Author: " + book.author;
-            document.getElementById("detailDescription").textContent = book.description || "No description available.";
-            document.getElementById("detailDescriptionFa").textContent = book.description_fa || ""; // Handle missing translation
-            document.getElementById("detailPdf").href = book.pdf_link;
+             document.getElementById("detailImage").alt = titleFa; // Set alt text to Persian title
+             document.getElementById("detailImage").onerror = function() { this.onerror=null; this.src=defaultImage; };
+            document.getElementById("detailAuthor").textContent = authorText; // Set Author text with Persian prefix
+            // document.getElementById("detailDescription").textContent = book.description; // English description removed
+            document.getElementById("detailDescriptionFa").textContent = descriptionFa; // Set Persian description
+            document.getElementById("pdfLink").href = book.pdf_link; // Ensure PDF link is set
 
             document.getElementById("bookGrid").style.display = "none";
-            document.getElementById("categoryFilter").style.display = "none"; // Hide filters in detail view
+            document.getElementById("categoryFilter").style.display = "none";
             document.getElementById("bookDetails").style.display = "block";
         }
 
         function closeDetails() {
-            // window.history.pushState({}, "", window.location.pathname); // Keep history simple
             document.getElementById("bookGrid").style.display = "grid";
-            document.getElementById("categoryFilter").style.display = "block"; // Show filters again
+            document.getElementById("categoryFilter").style.display = "block";
             document.getElementById("bookDetails").style.display = "none";
         }
 
-        /*
-        // Permalink functionality might conflict with filtering, disabled for now.
-        function checkForPermalink() {
-            const params = new URLSearchParams(window.location.search);
-            const bookId = params.get("book");
-            if (bookId) {
-                showBookDetails(bookId);
-            }
-        }
-        */
-
         // Initial setup
         displayCategories();
-        displayBooks(); // Display all books initially
+        displayBooks();
 
     </script>
 
